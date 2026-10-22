@@ -271,7 +271,7 @@ public class MapActivityActions extends MapActions {
 				//}
 			} else if (standardId == R.string.measure_distance_yandex) {
 				activity.getContextMenu().close();
-				MeasurementToolFragment.showInstance(activity.getSupportFragmentManager(), new LatLon(latitude, longitude));
+				MeasurementToolFragment.showDistanceMeasureInstance(activity.getSupportFragmentManager(), new LatLon(latitude, longitude));
 			} else if (standardId == R.string.avoid_road) {
 				app.getAvoidSpecificRoads().addImpassableRoad(activity, new LatLon(latitude, longitude), true, false, null);
 			} else if (standardId == R.string.shared_string_add || standardId == R.string.favourites_context_menu_edit) {
