@@ -409,7 +409,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			mainView.setVisibility(View.GONE);
 			simpleDistancePanel.setVisibility(View.VISIBLE);
 			ImageButton simpleUndoButton = view.findViewById(R.id.distance_measure_undo);
-			simpleUndoButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_undo_dark));
+			simpleUndoButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_undo_ruler));
 			simpleUndoButton.setOnClickListener(v -> undoBtn.performClick());
 			ImageButton simpleCloseButton = view.findViewById(R.id.distance_measure_close);
 			simpleCloseButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_remove_dark));
@@ -2059,7 +2059,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			if (simpleUndoButton != null) {
 				simpleUndoButton.setEnabled(enable);
 				simpleUndoButton.setImageDrawable(UiUtilities.tintDrawable(
-						getActiveIcon(R.drawable.ic_action_undo_dark),
+						getActiveIcon(R.drawable.ic_action_undo_ruler),
 						ContextCompat.getColor(view.getContext(), color)));
 			}
 		}

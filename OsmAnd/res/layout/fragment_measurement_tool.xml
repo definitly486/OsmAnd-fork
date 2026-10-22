@@ -366,7 +366,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/shared_string_undo"
                 android:padding="12dp"
-                android:src="@drawable/ic_action_undo_dark" />
+                android:src="@drawable/ic_action_undo_ruler" />
 
             <TextView
                 android:id="@+id/distance_measure_total"
