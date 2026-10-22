@@ -411,7 +411,9 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			ImageButton simpleCloseButton = view.findViewById(R.id.distance_measure_close);
 			simpleCloseButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_remove_dark));
 			simpleCloseButton.setOnClickListener(v -> callMapActivity(this::dismiss));
-			view.findViewById(R.id.distance_measure_add).setOnClickListener(v -> addCenterPoint());
+			View addDistancePointButton = view.findViewById(R.id.distance_measure_add);
+			addDistancePointButton.setVisibility(View.VISIBLE);
+			addDistancePointButton.setOnClickListener(v -> addCenterPoint());
 		}
 
 		mainIcon = mainView.findViewById(R.id.main_icon);
