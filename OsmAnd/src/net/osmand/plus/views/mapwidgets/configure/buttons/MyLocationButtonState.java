@@ -53,7 +53,7 @@ public class MyLocationButtonState extends MapButtonState {
 	@NonNull
 	@Override
 	public String getDefaultIconName(@Nullable Boolean nightMode) {
-		return "ic_my_location";
+		return "ic_my_location_arrow";
 	}
 
 	@Override
