@@ -49,6 +49,8 @@
 	<color name="map_button_icon_color_dark">#cccccc</color>
 	<color name="map_button_background_color_light">#FFFFFF</color>
 	<color name="map_button_background_color_dark">#000000</color>
+	<color name="distance_measure_add_bg">#3A3A3C</color>
+	<color name="distance_measure_add_bg_pressed">#5A5A5E</color>
 	<color name="icon_color_inverse_light">#FFFFFF</color>
 	<color name="icon_color_inverse_dark">#F2F2F2</color>
 	

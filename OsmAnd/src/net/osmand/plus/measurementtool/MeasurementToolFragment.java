@@ -188,6 +188,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 	private View measurementButtons;
 	private View distanceAddButton;
 	private View distanceHintView;
+	private boolean distanceHintDismissed;
 	private ImageButton snapToRoadButton;
 	private View profileConfigButton;
 	private MapHudLayout mapHudLayout;
@@ -576,7 +577,11 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			// Lives in the full-screen HUD layer (not in the bottom fragment container)
 			// so it can be centered vertically on the right side of the map
 			distanceAddButton = inflate(R.layout.distance_measure_add_button, mapHudLayout, false);
-			distanceAddButton.setOnClickListener(v -> addCenterPoint());
+			distanceAddButton.setOnClickListener(v -> {
+				if (addCenterPoint()) {
+					dismissDistanceHint();
+				}
+			});
 		}
 		snapToRoadButton = measurementButtons.findViewById(R.id.snap_to_road_image_button);
 		profileConfigButton = measurementButtons.findViewById(R.id.profile_with_config_btn);
@@ -1793,6 +1798,9 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		MeasurementToolLayer measurementLayer = getMeasurementLayer();
 		editingCtx.getCommandManager().execute(new AddPointCommand(measurementLayer, latLon));
 		doAddOrMovePointCommonStuff();
+		if (simpleDistanceMode) {
+			dismissDistanceHint();
+		}
 	}
 
 	private void addPoint() {
@@ -2097,10 +2105,17 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 
 	private void updateDistanceHint() {
 		if (distanceHintView != null) {
-			// The hint is only useful until the first point is placed
-			boolean noPoints = editingCtx.getPointsCount() < 1;
-			distanceHintView.setVisibility(noPoints ? View.VISIBLE : View.GONE);
+			distanceHintView.setVisibility(distanceHintDismissed ? View.GONE : View.VISIBLE);
 		}
+	}
+
+	/**
+	 * The hint is shown until the user places the first point on his own. The initial point
+	 * passed when the mode is opened from the context menu does not count.
+	 */
+	private void dismissDistanceHint() {
+		distanceHintDismissed = true;
+		updateDistanceHint();
 	}
 
 	private void updateToolbar() {

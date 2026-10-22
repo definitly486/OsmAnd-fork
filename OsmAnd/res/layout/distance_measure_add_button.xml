@@ -5,8 +5,8 @@
 	android:layout_height="56dp"
 	android:layout_gravity="end|center_vertical"
 	android:layout_marginEnd="12dp"
-	android:background="@drawable/btn_circle"
+	android:background="@drawable/bg_distance_measure_add"
 	android:contentDescription="@string/shared_string_add"
 	android:elevation="12dp"
-	android:padding="12dp"
-	android:src="@drawable/ic_action_add" />
+	android:padding="16dp"
+	android:src="@drawable/ic_action_add_no_bg" />
