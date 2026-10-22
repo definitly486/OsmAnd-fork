@@ -2685,6 +2685,12 @@ public class OsmandMapTileView implements IMapDownloaderCallback {
 
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			net.osmand.plus.measurementtool.MeasurementToolLayer measurementLayer =
+					getLayerByClass(net.osmand.plus.measurementtool.MeasurementToolLayer.class);
+			if (measurementLayer != null && measurementLayer.isDistanceMeasureMode()) {
+				// Keep the crosshair at the position reached when the user lifts their finger.
+				return true;
+			}
 			if (e1 != null) {
 				animatedDraggingThread.startDragging(velocityX / 3, velocityY / 3,
 						e1.getX(), e1.getY(),
