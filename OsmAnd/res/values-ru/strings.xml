@@ -1648,6 +1648,7 @@
     <string name="this_year">В этом году</string>
     <string name="plan_route">План маршрута</string>
     <string name="measure_distance_yandex">Измерить расстояние</string>
+    <string name="distance_measure_hint">Передвиньте карту, чтобы навести перекрестие, затем нажмите «+», чтобы добавить точку.</string>
     <string name="coordinate_input">Ввод координат</string>
     <string name="move_to_history">Переместить в историю</string>
     <string name="group_will_be_removed_after_restart">Группа будет выключена при следующем запуске приложения.</string>
