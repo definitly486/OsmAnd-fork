@@ -276,9 +276,13 @@ public class AndroidUiHelper {
 			Insets statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars()
 					| WindowInsetsCompat.Type.displayCutout()
 			);
+			// When the status bar is hidden (immersive mode) the display cutout inset is still reported,
+			// so the scrim must be collapsed explicitly, otherwise a gray strip stays at the top
+			boolean statusBarVisible = insets.isVisible(WindowInsetsCompat.Type.statusBars());
+			int scrimHeight = statusBarVisible ? statusBarInsets.top : 0;
 			ViewGroup.LayoutParams params = statusBarScrim.getLayoutParams();
-			if (params.height != statusBarInsets.top) {
-				params.height = statusBarInsets.top;
+			if (params.height != scrimHeight) {
+				params.height = scrimHeight;
 				statusBarScrim.setLayoutParams(params);
 			}
 		}
