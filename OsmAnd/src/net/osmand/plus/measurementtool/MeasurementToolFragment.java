@@ -186,6 +186,8 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 	private ImageView redoBtn;
 	private ImageView mainIcon;
 	private View measurementButtons;
+	private View distanceAddButton;
+	private View distanceHintView;
 	private ImageButton snapToRoadButton;
 	private View profileConfigButton;
 	private MapHudLayout mapHudLayout;
@@ -411,9 +413,8 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			ImageButton simpleCloseButton = view.findViewById(R.id.distance_measure_close);
 			simpleCloseButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_remove_dark));
 			simpleCloseButton.setOnClickListener(v -> callMapActivity(this::dismiss));
-			View addDistancePointButton = view.findViewById(R.id.distance_measure_add);
-			addDistancePointButton.setVisibility(View.VISIBLE);
-			addDistancePointButton.setOnClickListener(v -> addCenterPoint());
+			distanceHintView = view.findViewById(R.id.distance_measure_hint);
+			updateDistanceHint();
 		}
 
 		mainIcon = mainView.findViewById(R.id.main_icon);
@@ -571,6 +572,12 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		});
 		mapHudLayout = mapActivity.findViewById(R.id.map_hud_layout);
 		measurementButtons = inflate(R.layout.measurement_buttons, mapHudLayout, false);
+		if (simpleDistanceMode) {
+			// Lives in the full-screen HUD layer (not in the bottom fragment container)
+			// so it can be centered vertically on the right side of the map
+			distanceAddButton = inflate(R.layout.distance_measure_add_button, mapHudLayout, false);
+			distanceAddButton.setOnClickListener(v -> addCenterPoint());
+		}
 		snapToRoadButton = measurementButtons.findViewById(R.id.snap_to_road_image_button);
 		profileConfigButton = measurementButtons.findViewById(R.id.profile_with_config_btn);
 
@@ -832,6 +839,9 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		if (mapHudLayout != null && measurementButtons != null && !simpleDistanceMode) {
 			mapHudLayout.addWidget(measurementButtons);
 		}
+		if (mapHudLayout != null && distanceAddButton != null && distanceAddButton.getParent() == null) {
+			mapHudLayout.addView(distanceAddButton);
+		}
 	}
 
 	@Override
@@ -851,6 +861,9 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 
 		if (mapHudLayout != null && measurementButtons != null && !simpleDistanceMode) {
 			mapHudLayout.removeWidget(measurementButtons);
+		}
+		if (mapHudLayout != null && distanceAddButton != null) {
+			mapHudLayout.removeView(distanceAddButton);
 		}
 	}
 
@@ -2078,7 +2091,16 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		if (simpleDistanceTv != null) {
 			simpleDistanceTv.setText(distanceStr);
 		}
+		updateDistanceHint();
 		updateToolbar();
+	}
+
+	private void updateDistanceHint() {
+		if (distanceHintView != null) {
+			// The hint is only useful until the first point is placed
+			boolean noPoints = editingCtx.getPointsCount() < 1;
+			distanceHintView.setVisibility(noPoints ? View.VISIBLE : View.GONE);
+		}
 	}
 
 	private void updateToolbar() {
