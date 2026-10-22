@@ -63,6 +63,7 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 	private static final double MIN_DISTANCE_TO_SHOW_REF_ZOOM = MapUtils.getTileDistanceWidth(START_ZOOM) / 10;
 
 	private boolean inMeasurementMode;
+	private boolean distanceMeasureMode;
 
 	private Bitmap centerIconDay;
 	private Bitmap centerIconNight;
@@ -202,6 +203,14 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 
 	void setInMeasurementMode(boolean inMeasurementMode) {
 		this.inMeasurementMode = inMeasurementMode;
+	}
+
+	void setDistanceMeasureMode(boolean distanceMeasureMode) {
+		this.distanceMeasureMode = distanceMeasureMode;
+	}
+
+	public boolean isDistanceMeasureMode() {
+		return distanceMeasureMode;
 	}
 
 	public void setTrackChartPoints(TrackChartPoints trackChartPoints) {
