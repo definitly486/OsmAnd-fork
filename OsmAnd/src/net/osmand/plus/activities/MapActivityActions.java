@@ -222,7 +222,7 @@ public class MapActivityActions extends MapActions {
 		}
 
 		adapter.addItem(new ContextMenuItem(MAP_CONTEXT_MENU_MEASURE_DISTANCE)
-				.setTitleId(R.string.plan_route, activity)
+				.setTitleId(R.string.measure_distance_yandex, activity)
 				.setIcon(R.drawable.ic_action_ruler)
 				.setOrder(MEASURE_DISTANCE_ITEM_ORDER));
 
@@ -269,7 +269,7 @@ public class MapActivityActions extends MapActions {
 				//			new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 				//			REQUEST_LOCATION_FOR_DIRECTIONS_NAVIGATION_PERMISSION);
 				//}
-			} else if (standardId == R.string.plan_route) {
+			} else if (standardId == R.string.measure_distance_yandex) {
 				activity.getContextMenu().close();
 				MeasurementToolFragment.showInstance(activity.getSupportFragmentManager(), new LatLon(latitude, longitude));
 			} else if (standardId == R.string.avoid_road) {
