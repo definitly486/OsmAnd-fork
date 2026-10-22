@@ -21,6 +21,7 @@ import net.osmand.plus.mapcontextmenu.MapContextMenu;
 import net.osmand.plus.mapcontextmenu.MapContextMenuFragment;
 import net.osmand.plus.mapcontextmenu.other.MapMultiSelectionMenu;
 import net.osmand.plus.measurementtool.GpxApproximationFragment;
+import net.osmand.plus.measurementtool.MeasurementToolFragment;
 import net.osmand.plus.measurementtool.SnapTrackWarningFragment;
 import net.osmand.plus.routepreparationmenu.MapRouteInfoMenu;
 import net.osmand.plus.routing.RoutingHelper;
@@ -86,6 +87,7 @@ public class WidgetsVisibilityHelper {
 
 	public boolean shouldShowFabButton() {
 		return !isInAppearancePreviewMode()
+				&& !isInSimpleDistanceMode()
 				&& !isInChangeMarkerPositionMode()
 				&& !isInGpxDetailsMode()
 				&& !isInTrackMenuMode()
@@ -136,6 +138,7 @@ public class WidgetsVisibilityHelper {
 
 	public boolean shouldShowBottomMenuButtons() {
 		return !isInAppearancePreviewMode()
+				&& !isInSimpleDistanceMode()
 				&& !mapActivity.shouldHideTopControls()
 				&& !isInMovingMarkerMode()
 				&& !isInGpxDetailsMode()
@@ -150,7 +153,7 @@ public class WidgetsVisibilityHelper {
 	}
 
 	public boolean shouldShowZoomButtons() {
-		if (isInAppearancePreviewMode()) {
+		if (isInAppearancePreviewMode() || isInSimpleDistanceMode()) {
 			return false;
 		}
 		boolean screensAllowed = shouldShowElementOnActiveScreen(ZOOM_BUTTONS);
@@ -172,6 +175,7 @@ public class WidgetsVisibilityHelper {
 
 	public boolean shouldHideCompass() {
 		return isInAppearancePreviewMode()
+				|| isInSimpleDistanceMode()
 				|| mapActivity.shouldHideTopControls()
 				|| isTrackDetailsMenuOpened()
 				|| isInChoosingRoutesMode()
@@ -183,6 +187,7 @@ public class WidgetsVisibilityHelper {
 
 	public boolean shouldShowTopButtons() {
 		return !isInAppearancePreviewMode()
+				&& !isInSimpleDistanceMode()
 				&& !mapActivity.shouldHideTopControls()
 				&& !isInAttachToRoads()
 				&& !isTrackDetailsMenuOpened()
@@ -212,6 +217,7 @@ public class WidgetsVisibilityHelper {
 
 		return showTopControls
 				&& !isInAppearancePreviewMode()
+				&& !isInSimpleDistanceMode()
 				&& !isInConfigureMapOptionMode()
 				&& !isInPlanRouteMode()
 				&& !(isMapLinkedToLocation() && routingHelper.isFollowingMode())
@@ -295,6 +301,15 @@ public class WidgetsVisibilityHelper {
 
 	private boolean isInMeasurementToolMode() {
 		return mapLayers.getMeasurementToolLayer().isInMeasurementMode();
+	}
+
+	/**
+	 * Simple "measure distance" mode: only the crosshair, the add-point button
+	 * and the bottom distance panel are shown, all other map buttons are hidden.
+	 */
+	public boolean isInSimpleDistanceMode() {
+		MeasurementToolFragment fragment = fragmentsHelper.getMeasurementToolFragment();
+		return fragment != null && fragment.isSimpleDistanceMode();
 	}
 
 	private boolean isInAttachToRoads() {

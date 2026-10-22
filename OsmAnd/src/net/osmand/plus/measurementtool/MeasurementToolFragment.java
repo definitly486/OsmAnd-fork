@@ -829,7 +829,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 				updateToolbar();
 			}
 		});
-		if (mapHudLayout != null && measurementButtons != null) {
+		if (mapHudLayout != null && measurementButtons != null && !simpleDistanceMode) {
 			mapHudLayout.addWidget(measurementButtons);
 		}
 	}
@@ -849,7 +849,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		detailsMenu.setMapActivity(null);
 		updateMapDisplayPosition();
 
-		if (mapHudLayout != null && measurementButtons != null) {
+		if (mapHudLayout != null && measurementButtons != null && !simpleDistanceMode) {
 			mapHudLayout.removeWidget(measurementButtons);
 		}
 	}
@@ -2247,6 +2247,10 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		fragment.setInitialPoint(initialPoint);
 		fragment.setMode(PLAN_ROUTE_MODE, true);
 		return showFragment(fragment, fragmentManager);
+	}
+
+	public boolean isSimpleDistanceMode() {
+		return simpleDistanceMode;
 	}
 
 	public static boolean showDistanceMeasureInstance(FragmentManager fragmentManager, LatLon initialPoint) {
