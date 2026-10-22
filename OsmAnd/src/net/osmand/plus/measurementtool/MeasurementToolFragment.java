@@ -523,6 +523,10 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		if (!editingCtx.getCommandManager().canRedo()) {
 			updateUndoRedoButton(false, redoBtn);
 		}
+		if (simpleDistanceMode) {
+			ImageButton simpleUndoButton = view.findViewById(R.id.distance_measure_undo);
+			simpleUndoButton.setEnabled(editingCtx.getCommandManager().canUndo());
+		}
 		if (editingCtx.getPointsCount() < 1) {
 			disable(upDownBtn);
 		}
