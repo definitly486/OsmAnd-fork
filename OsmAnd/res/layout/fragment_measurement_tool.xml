@@ -345,7 +345,7 @@
             android:paddingEnd="20dp"
             android:paddingBottom="12dp"
             android:text="@string/distance_measure_hint"
-            android:textAppearance="@style/TextAppearance.ListItemSecondary"
+            android:textAppearance="@style/TextAppearance.ListItemCategoryTitle"
             android:textColor="?android:textColorSecondary" />
 
         <View
