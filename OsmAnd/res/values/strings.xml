@@ -4040,6 +4040,7 @@ You need to activate the sensor so OsmAnd can find it.</string>
     <string name="shared_string_finish">Finish</string>
     <string name="plan_route">Plan a route</string>
     <string name="measure_distance_yandex">Measure distance</string>
+    <string name="distance_measure_hint">Move the map to position the crosshair, then tap + to add a point.</string>
     <string name="shared_string_sort">Sort</string>
     <string name="coordinate_input">Coordinate input</string>
     <string name="marker_save_as_track_descr">Export your markers to the following GPX file:</string>
