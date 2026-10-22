@@ -218,7 +218,7 @@ public class MapControlsLayer extends OsmandMapLayer {
 
 		MapActivity activity = getMapActivity();
 		if (activity != null) {
-			AndroidUtils.showNavBar(activity);
+			AndroidUtils.showSystemBars(activity);
 		}
 	}
 
@@ -300,7 +300,7 @@ public class MapControlsLayer extends OsmandMapLayer {
 		if (isMapControlsVisible()) {
 			hideMapControls();
 			if (switchNavBarVisibility) {
-				AndroidUtils.hideNavBar(mapActivity);
+				AndroidUtils.hideSystemBars(mapActivity);
 			}
 		} else {
 			showMapControls();

@@ -66,6 +66,8 @@ import androidx.core.content.FileProvider;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.text.TextUtilsCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -919,6 +921,26 @@ public class AndroidUtils {
 		if (isNavBarVisible(activity)) {
 			switchNavBarVisibility(activity);
 		}
+	}
+
+	/**
+	 * Hides both the status bar and the navigation bar (immersive mode).
+	 * The bars can be temporarily revealed by a swipe from the screen edge.
+	 */
+	public static void hideSystemBars(@NonNull Activity activity) {
+		Window window = activity.getWindow();
+		WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, window.getDecorView());
+		controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+		controller.hide(WindowInsetsCompat.Type.systemBars());
+	}
+
+	/**
+	 * Restores the status bar and the navigation bar.
+	 */
+	public static void showSystemBars(@NonNull Activity activity) {
+		Window window = activity.getWindow();
+		WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, window.getDecorView());
+		controller.show(WindowInsetsCompat.Type.systemBars());
 	}
 
 	public static boolean isNavBarVisible(Activity activity) {
