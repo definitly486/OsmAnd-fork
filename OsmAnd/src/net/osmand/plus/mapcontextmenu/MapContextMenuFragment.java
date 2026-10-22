@@ -59,6 +59,7 @@ import net.osmand.plus.mapcontextmenu.AdditionalActionsBottomSheetDialogFragment
 import net.osmand.plus.mapcontextmenu.MenuController.MenuState;
 import net.osmand.plus.mapcontextmenu.controllers.FavouritePointMenuController;
 import net.osmand.plus.mapcontextmenu.other.MenuObjectUtils;
+import net.osmand.plus.measurementtool.MeasurementToolFragment;
 import net.osmand.plus.routepreparationmenu.ChooseRouteFragment;
 import net.osmand.plus.routepreparationmenu.MapRouteInfoMenu;
 import net.osmand.plus.settings.backend.menuitems.MainContextMenuItemsSettings;
@@ -680,6 +681,23 @@ public class MapContextMenuFragment extends BaseFullScreenFragment implements Do
 				buttons.addView(getActionView(items.get(i), i, additionalAdapter, mainListener, additionalListener), params);
 			}
 		}
+		// Keep the standard context actions and add a dedicated distance-measure action
+		// directly to this visible row, rather than hiding it in the "More" sheet.
+		LayoutInflater inflater = UiUtilities.getInflater(getContext(), nightMode);
+		View measureView = inflater.inflate(R.layout.context_menu_action_item, buttons, false);
+		ImageView measureIcon = measureView.findViewById(R.id.icon);
+		TextView measureTitle = measureView.findViewById(R.id.text);
+		measureIcon.setImageDrawable(uiUtilities.getIcon(R.drawable.ic_action_ruler, nightMode));
+		measureTitle.setText(R.string.measure_distance_yandex);
+		measureView.setOnClickListener(v -> {
+			MapActivity activity = getMapActivity();
+			LatLon point = menu.getLatLon();
+			if (activity != null && point != null) {
+				MeasurementToolFragment.showDistanceMeasureInstance(
+						activity.getSupportFragmentManager(), point);
+			}
+		});
+		buttons.addView(measureView, params);
 		buttons.setGravity(Gravity.CENTER);
 	}
 
