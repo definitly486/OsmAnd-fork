@@ -693,8 +693,11 @@ public class MapContextMenuFragment extends BaseFullScreenFragment implements Do
 			MapActivity activity = getMapActivity();
 			LatLon point = menu.getLatLon();
 			if (activity != null && point != null) {
-				MeasurementToolFragment.showDistanceMeasureInstance(
-						activity.getSupportFragmentManager(), point);
+				// Close the selected-point sheet first, then launch measurement so the
+				// context-menu back-stack pop cannot remove the measurement fragment.
+				dismissMenu();
+				view.post(() -> MeasurementToolFragment.showDistanceMeasureInstance(
+						activity.getSupportFragmentManager(), point));
 			}
 		});
 		buttons.addView(measureView, params);
