@@ -110,9 +110,10 @@ android {
 	}
 
 	buildFeatures {
-		aidl true
-		compose true
-	}
+    aidl true
+    compose true
+    buildConfig true
+}
 
 	flavorDimensions "version", "coreversion", "abi"
 	productFlavors {
