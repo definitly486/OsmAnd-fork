@@ -33,21 +33,6 @@
                 android:visibility="invisible"
                 tools:visibility="visible" />
 
-            <ImageButton
-        android:id="@+id/distance_measure_add"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/shared_string_add"
-        android:elevation="12dp"
-        android:padding="8dp"
-        android:src="@drawable/ic_action_add"
-        android:visibility="gone" />
-
-</FrameLayout>
-
 	    <LinearLayout
 		    android:id="@+id/main_content"
 		    android:layout_width="match_parent"
@@ -407,5 +392,18 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/distance_measure_add"
+        android:layout_width="@dimen/map_button_size"
+        android:layout_height="@dimen/map_button_size"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/map_button_margin"
+        android:background="@drawable/btn_circle"
+        android:contentDescription="@string/shared_string_add"
+        android:elevation="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_action_add"
+        android:visibility="gone" />
 
 </FrameLayout>
