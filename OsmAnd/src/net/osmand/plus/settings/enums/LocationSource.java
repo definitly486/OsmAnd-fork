@@ -9,7 +9,6 @@ import net.osmand.plus.R;
 
 public enum LocationSource {
 
-	GOOGLE_PLAY_SERVICES(R.string.google_play_services),
 	ANDROID_API(R.string.android_api);
 
 	@StringRes
