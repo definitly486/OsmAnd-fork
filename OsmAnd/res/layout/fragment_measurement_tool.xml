@@ -320,8 +320,8 @@
 
         </LinearLayout>
 
+        </FrameLayout>
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/distance_measure_panel"
