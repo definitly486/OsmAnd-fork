@@ -50,6 +50,8 @@ android {
 	}
 
 	defaultConfig {
+		// Keep only Russian translations in the APK; default resources remain as fallback.
+		resConfigs "ru"
 		minSdkVersion osmand_minSdk
 		versionCode 5550
 		versionCode System.getenv("APK_NUMBER_VERSION") ? System.getenv("APK_NUMBER_VERSION").toInteger() : versionCode
@@ -167,7 +169,8 @@ android {
 		release {
 			signingConfig signingConfigs.publishing
 			minifyEnabled true
-			shrinkResources false
+			// Remove resources not referenced by the optimized release code.
+			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 	}
