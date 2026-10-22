@@ -404,9 +404,13 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		if (simpleDistanceMode) {
 			mainView.setVisibility(View.GONE);
 			simpleDistancePanel.setVisibility(View.VISIBLE);
-			view.findViewById(R.id.distance_measure_undo).setOnClickListener(v -> undoBtn.performClick());
+			ImageButton simpleUndoButton = view.findViewById(R.id.distance_measure_undo);
+			simpleUndoButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_undo_dark));
+			simpleUndoButton.setOnClickListener(v -> undoBtn.performClick());
+			ImageButton simpleCloseButton = view.findViewById(R.id.distance_measure_close);
+			simpleCloseButton.setImageDrawable(getActiveIcon(R.drawable.ic_action_remove_dark));
+			simpleCloseButton.setOnClickListener(v -> callMapActivity(this::dismiss));
 			view.findViewById(R.id.distance_measure_add).setOnClickListener(v -> addCenterPoint());
-			view.findViewById(R.id.distance_measure_close).setOnClickListener(v -> callMapActivity(this::dismiss));
 		}
 
 		mainIcon = mainView.findViewById(R.id.main_icon);
@@ -2018,6 +2022,15 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		ImageView imageView = ((ImageView) view);
 		imageView.setImageDrawable(UiUtilities.tintDrawable(imageView.getDrawable(),
 				ContextCompat.getColor(view.getContext(), color)));
+		if (view.getId() == R.id.undo_point_button && getView() != null) {
+			ImageButton simpleUndoButton = getView().findViewById(R.id.distance_measure_undo);
+			if (simpleUndoButton != null) {
+				simpleUndoButton.setEnabled(enable);
+				simpleUndoButton.setImageDrawable(UiUtilities.tintDrawable(
+						getActiveIcon(R.drawable.ic_action_undo_dark),
+						ContextCompat.getColor(view.getContext(), color)));
+			}
+		}
 	}
 
 	private void enable(View view) {
