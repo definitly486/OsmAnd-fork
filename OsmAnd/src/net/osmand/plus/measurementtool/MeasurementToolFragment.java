@@ -406,7 +406,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			simpleDistancePanel.setVisibility(View.VISIBLE);
 			view.findViewById(R.id.distance_measure_undo).setOnClickListener(v -> undoBtn.performClick());
 			view.findViewById(R.id.distance_measure_add).setOnClickListener(v -> addCenterPoint());
-			view.findViewById(R.id.distance_measure_close).setOnClickListener(v -> quit(true));
+			view.findViewById(R.id.distance_measure_close).setOnClickListener(v -> callMapActivity(this::dismiss));
 		}
 
 		mainIcon = mainView.findViewById(R.id.main_icon);
