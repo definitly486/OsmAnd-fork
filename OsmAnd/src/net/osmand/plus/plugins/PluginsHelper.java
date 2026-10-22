@@ -108,28 +108,24 @@ public class PluginsHelper {
 		Set<String> enabledPlugins = app.getSettings().getEnabledPlugins();
 		allPlugins.clear();
 
-		allPlugins.add(new WikipediaPlugin(app));
-		allPlugins.add(new OsmandRasterMapsPlugin(app));
-		allPlugins.add(new OsmandMonitoringPlugin(app));
-		checkMarketPlugin(app, new SRTMPlugin(app));
-		allPlugins.add(new WeatherPlugin(app));
-		checkMarketPlugin(app, new NauticalMapsPlugin(app));
-		allPlugins.add(new AisTrackerPlugin(app));
-		checkMarketPlugin(app, new SkiMapsPlugin(app));
-		allPlugins.add(new AudioVideoNotesPlugin(app));
-		checkMarketPlugin(app, new ParkingPositionPlugin(app));
-		allPlugins.add(new OsmEditingPlugin(app));
-		allPlugins.add(new MapillaryPlugin(app));
-		allPlugins.add(new PanoramaxPlugin(app));
-		allPlugins.add(new ExternalSensorsPlugin(app));
-		allPlugins.add(new VehicleMetricsPlugin(app));
-		allPlugins.add(new AstronomyPlugin(app));
-		allPlugins.add(new AccessibilityPlugin(app));
-		allPlugins.add(new OsmandDevelopmentPlugin(app));
+		// This build exposes only the online/raster maps plugin.
+		OsmandRasterMapsPlugin onlineMapsPlugin = new OsmandRasterMapsPlugin(app);
+		allPlugins.add(onlineMapsPlugin);
 
-		loadCustomPlugins(app);
+		// Remove stale enabled-plugin IDs left by previous installations and enable
+		// online maps by default. Keep custom/third-party plugins out of this build.
+		Set<String> enabledIds = new HashSet<>(enabledPlugins);
+		for (String pluginId : enabledIds) {
+			if (!onlineMapsPlugin.getId().equals(pluginId)) {
+				app.getSettings().enablePlugin(pluginId, false);
+				enabledPlugins.remove(pluginId);
+			}
+		}
+		if (!enabledPlugins.contains(onlineMapsPlugin.getId())) {
+			enabledPlugins.add(onlineMapsPlugin.getId());
+			app.getSettings().enablePlugin(onlineMapsPlugin.getId(), true);
+		}
 		registerAppInitializingDependedProperties(app);
-		enablePluginsByDefault(app, enabledPlugins);
 		activatePlugins(app, enabledPlugins);
 	}
 
