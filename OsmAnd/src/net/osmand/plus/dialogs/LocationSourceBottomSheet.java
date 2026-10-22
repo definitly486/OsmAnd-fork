@@ -42,10 +42,9 @@ public class LocationSourceBottomSheet extends MenuBottomSheetDialogFragment {
 
 	private void createHeaderItem() {
 		String androidApi = LocationSource.ANDROID_API.toHumanString(app);
-		String playServices = LocationSource.GOOGLE_PLAY_SERVICES.toHumanString(app);
 
 		BaseBottomSheetItem titleItem = new BottomSheetItemWithDescription.Builder()
-				.setDescription(getString(R.string.location_source_descr, playServices, playServices, androidApi))
+				.setDescription(getString(R.string.location_source_descr_no_gms))
 				.setDescriptionMaxLines(Integer.MAX_VALUE)
 				.setTitle(getString(R.string.location_source))
 				.setLayoutId(R.layout.bottom_sheet_item_title_with_description)
