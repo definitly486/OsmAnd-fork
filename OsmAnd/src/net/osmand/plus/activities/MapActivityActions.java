@@ -221,11 +221,6 @@ public class MapActivityActions extends MapActions {
 			adapter.addItem(addGpxItem);
 		}
 
-		adapter.addItem(new ContextMenuItem(MAP_CONTEXT_MENU_MEASURE_DISTANCE)
-				.setTitleId(R.string.measure_distance_yandex, activity)
-				.setIcon(R.drawable.ic_action_ruler)
-				.setOrder(MEASURE_DISTANCE_ITEM_ORDER));
-
 		adapter.addItem(new ContextMenuItem(MAP_CONTEXT_MENU_AVOID_ROAD)
 				.setTitleId(R.string.avoid_road, activity)
 				.setIcon(R.drawable.ic_action_alert)
