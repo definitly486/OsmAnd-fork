@@ -510,6 +510,10 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 			distanceToCenterTv.setText(String.format("%1$s • %2$s", distStr, azimuthStr));
 			TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(distanceToCenterTv,
 					14, 18, 2, COMPLEX_UNIT_SP);
+			if (simpleDistanceMode && simpleDistanceTv != null) {
+				double totalDistance = editingCtx.getRouteDistance() + distance;
+				simpleDistanceTv.setText(OsmAndFormatter.getFormattedDistance((float) totalDistance, app));
+			}
 		});
 
 		measurementLayer.setOnEnterMovePointModeListener(() -> {
