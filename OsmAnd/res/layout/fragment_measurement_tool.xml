@@ -33,7 +33,20 @@
                 android:visibility="invisible"
                 tools:visibility="visible" />
 
-        </FrameLayout>
+            <ImageButton
+        android:id="@+id/distance_measure_add"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/map_button_background"
+        android:contentDescription="@string/shared_string_add"
+        android:elevation="12dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_action_add"
+        android:visibility="gone" />
+
+</FrameLayout>
 
 	    <LinearLayout
 		    android:id="@+id/main_content"
@@ -382,18 +395,6 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/distance_measure_add"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/shared_string_add"
-                android:gravity="center"
-                android:text="+"
-                android:textColor="?attr/color_dialog_buttons"
-                android:textSize="36sp"
-                android:textStyle="normal" />
 
             <ImageButton
                 android:id="@+id/distance_measure_close"
