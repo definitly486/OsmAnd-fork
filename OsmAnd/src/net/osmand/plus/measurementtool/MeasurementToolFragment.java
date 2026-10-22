@@ -351,6 +351,7 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		editingCtx.setupRouteSettingsListener();
 
 		measurementLayer.setEditingCtx(editingCtx);
+		measurementLayer.setDistanceMeasureMode(simpleDistanceMode);
 
 		portrait = AndroidUiHelper.isPortrait(mapActivity);
 		int btnWidth = getResources().getDimensionPixelOffset(R.dimen.gpx_group_button_width);
