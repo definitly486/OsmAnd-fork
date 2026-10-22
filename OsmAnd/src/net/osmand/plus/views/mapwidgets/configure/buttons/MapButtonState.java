@@ -212,6 +212,15 @@ public abstract class MapButtonState {
 		updatePosition(defaultPositionSize);
 	}
 
+	/**
+	 * @return true if the user has moved this button, so the default arrangement must not be applied
+	 */
+	public boolean hasCustomPosition() {
+		CommonPreference<Long> preference = portrait ? portraitPositionPref : landscapePositionPref;
+		Long value = preference.get();
+		return value != null && value > 0;
+	}
+
 	public void savePosition() {
 		ButtonPositionSize positionSize = getPositionSize();
 		CommonPreference<Long> preference = portrait ? portraitPositionPref : landscapePositionPref;

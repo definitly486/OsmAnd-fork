@@ -19,7 +19,8 @@ public class QuickSearchButtonState extends MapButtonState {
 
 	public QuickSearchButtonState(@NonNull OsmandApplication app) {
 		super(app, QUICK_SEARCH_HUD_ID);
-		this.visibilityPref = addPreference(settings.registerBooleanPreference(id + "_state", true)).makeProfile();
+		// Hidden by default, can be enabled in the map buttons settings
+		this.visibilityPref = addPreference(settings.registerBooleanPreference(id + "_state", false)).makeProfile();
 	}
 
 	@NonNull

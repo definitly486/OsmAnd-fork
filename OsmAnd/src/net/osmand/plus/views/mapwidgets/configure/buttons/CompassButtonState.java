@@ -3,7 +3,6 @@ package net.osmand.plus.views.mapwidgets.configure.buttons;
 import static net.osmand.aidlapi.OsmAndCustomizationConstants.COMPASS_HUD_ID;
 import static net.osmand.plus.quickaction.ButtonAppearanceParams.SMALL_SIZE_DP;
 import static net.osmand.plus.settings.enums.CompassVisibility.ALWAYS_HIDDEN;
-import static net.osmand.plus.settings.enums.CompassVisibility.ALWAYS_VISIBLE;
 import static net.osmand.shared.grid.ButtonPositionSize.POS_LEFT;
 import static net.osmand.shared.grid.ButtonPositionSize.POS_TOP;
 
@@ -87,7 +86,7 @@ public class CompassButtonState extends MapButtonState {
 	private CommonPreference<CompassVisibility> createVisibilityPref() {
 		CommonPreference<CompassVisibility> preference = (CommonPreference<CompassVisibility>) settings.getPreference("compass_visibility");
 		if (preference == null) {
-			preference = addPreference(new EnumStringPreference<>(settings, "compass_visibility", ALWAYS_VISIBLE, CompassVisibility.values()) {
+			preference = addPreference(new EnumStringPreference<>(settings, "compass_visibility", ALWAYS_HIDDEN, CompassVisibility.values()) {
 
 				@Override
 				public CompassVisibility getModeValue(ApplicationMode mode) {

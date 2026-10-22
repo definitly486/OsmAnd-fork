@@ -1,6 +1,9 @@
 package net.osmand.plus.views.controls;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static net.osmand.aidlapi.OsmAndCustomizationConstants.BACK_TO_LOC_HUD_ID;
+import static net.osmand.aidlapi.OsmAndCustomizationConstants.ZOOM_IN_HUD_ID;
+import static net.osmand.aidlapi.OsmAndCustomizationConstants.ZOOM_OUT_HUD_ID;
 import static net.osmand.plus.OsmAndConstants.UI_HANDLER_MAP_HUD;
 import static net.osmand.plus.quickaction.ButtonAppearanceParams.BIG_SIZE_DP;
 import static net.osmand.plus.quickaction.ButtonAppearanceParams.SMALL_SIZE_DP;
@@ -532,8 +535,28 @@ public class MapHudLayout extends FrameLayout {
 				ButtonPositionSize panelPosition = widgetPositions.get(leftWidgetsPanel);
 				position.setXMove(panelPosition != null && panelPosition.isMoveDescendantsAny());
 			}
+			MapButtonState buttonState = button.getButtonState();
+			if (buttonState != null && !buttonState.hasCustomPosition()) {
+				updateDefaultRightSidePosition(position);
+			}
 		}
 		return position;
+	}
+
+	/**
+	 * Default arrangement of the right side buttons: zoom buttons are centered vertically,
+	 * "my location" button takes the slot right above the bottom edge, where zoom in used to be.
+	 */
+	private void updateDefaultRightSidePosition(@NonNull ButtonPositionSize position) {
+		String id = position.getId();
+		int buttonHeight = position.getHeight();
+		if (ZOOM_IN_HUD_ID.equals(id) || ZOOM_OUT_HUD_ID.equals(id)) {
+			int totalHeight = Math.round(getContentHeight() / dpToPx / CELL_SIZE_DP);
+			int centerMargin = Math.max(0, (totalHeight - 2 * buttonHeight) / 2);
+			position.setMarginY(ZOOM_OUT_HUD_ID.equals(id) ? centerMargin : centerMargin + buttonHeight);
+		} else if (BACK_TO_LOC_HUD_ID.equals(id)) {
+			position.setMarginY(buttonHeight);
+		}
 	}
 
 	private boolean shouldMoveDescendantsAny(@Nullable SideWidgetsPanel panel) {
