@@ -227,6 +227,11 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 
 	@Override
 	public boolean onSingleTap(@NonNull PointF point, @NonNull RotatedTileBox tileBox) {
+		// In simple distance mode, points are added only by the floating confirmation button.
+		// Do not let map taps create points or select existing measurement points.
+		if (distanceMeasureMode) {
+			return true;
+		}
 		if (inMeasurementMode && !tapsDisabled && editingCtx.getSelectedPointPosition() == -1) {
 			MapActivity mapActivity = getMapActivity();
 
@@ -290,6 +295,10 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 
 	@Override
 	public boolean onLongPressEvent(@NonNull PointF point, @NonNull RotatedTileBox tileBox) {
+		// Keep simple distance mode controlled exclusively by its on-screen button.
+		if (distanceMeasureMode) {
+			return true;
+		}
 		if (inMeasurementMode && !tapsDisabled) {
 			if (showPointsMinZoom
 					&& editingCtx.getSelectedPointPosition() == -1
