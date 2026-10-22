@@ -300,8 +300,10 @@ tasks.register('collectExternalResources') {
 			copyColorPalettes,
 			copyPoiCategories,
 			copyRouteActivities,
-			downloadWorldMiniBasemap,
-			downloadStarsDb,
+			// Not bundled in this build: the 73 MB offline world basemap and the stars database of the
+			// astronomy plugin, which is not registered. Add them back to bundle them again.
+			// downloadWorldMiniBasemap,
+			// downloadStarsDb,
 			collectTestResources,
 			copy3DModels
 }
