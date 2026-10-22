@@ -167,6 +167,8 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 	private TextView distanceTv;
 	private TextView pointsTv;
 	private TextView distanceToCenterTv;
+	private TextView simpleDistanceTv;
+	private boolean simpleDistanceMode;
 	private String pointsSt;
 	private ViewGroup cardsContainer;
 	private MapBaseCard visibleCard;
@@ -396,6 +398,16 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 		distanceTv = mainView.findViewById(R.id.measurement_distance_text_view);
 		pointsTv = mainView.findViewById(R.id.measurement_points_text_view);
 		distanceToCenterTv = mainView.findViewById(R.id.distance_to_center_text_view);
+
+		View simpleDistancePanel = view.findViewById(R.id.distance_measure_panel);
+		simpleDistanceTv = view.findViewById(R.id.distance_measure_total);
+		if (simpleDistanceMode) {
+			mainView.setVisibility(View.GONE);
+			simpleDistancePanel.setVisibility(View.VISIBLE);
+			view.findViewById(R.id.distance_measure_undo).setOnClickListener(v -> undoBtn.performClick());
+			view.findViewById(R.id.distance_measure_add).setOnClickListener(v -> addCenterPoint());
+			view.findViewById(R.id.distance_measure_close).setOnClickListener(v -> quit(true));
+		}
 
 		mainIcon = mainView.findViewById(R.id.main_icon);
 		upDownBtn = mainView.findViewById(R.id.up_down_button);
@@ -2033,12 +2045,22 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 
 	private void updateDistancePointsText() {
 		String distanceStr = OsmAndFormatter.getFormattedDistance((float) editingCtx.getRouteDistance(), app);
-		distanceTv.setText(distanceStr + ",");
-		pointsTv.setText((portrait ? pointsSt + ": " : "") + editingCtx.getPointsCount());
+		if (distanceTv != null) {
+			distanceTv.setText(distanceStr + ",");
+		}
+		if (pointsTv != null) {
+			pointsTv.setText((portrait ? pointsSt + ": " : "") + editingCtx.getPointsCount());
+		}
+		if (simpleDistanceTv != null) {
+			simpleDistanceTv.setText(distanceStr);
+		}
 		updateToolbar();
 	}
 
 	private void updateToolbar() {
+		if (simpleDistanceMode) {
+			return;
+		}
 		callMapActivity(mapActivity -> {
 			String fileName = getSuggestedFileName();
 			boolean editMode = isInEditMode();
@@ -2198,6 +2220,14 @@ public class MeasurementToolFragment extends BaseFullScreenFragment implements R
 
 	public static boolean showInstance(FragmentManager fragmentManager, LatLon initialPoint) {
 		MeasurementToolFragment fragment = new MeasurementToolFragment();
+		fragment.setInitialPoint(initialPoint);
+		fragment.setMode(PLAN_ROUTE_MODE, true);
+		return showFragment(fragment, fragmentManager);
+	}
+
+	public static boolean showDistanceMeasureInstance(FragmentManager fragmentManager, LatLon initialPoint) {
+		MeasurementToolFragment fragment = new MeasurementToolFragment();
+		fragment.simpleDistanceMode = true;
 		fragment.setInitialPoint(initialPoint);
 		fragment.setMode(PLAN_ROUTE_MODE, true);
 		return showFragment(fragment, fragmentManager);
