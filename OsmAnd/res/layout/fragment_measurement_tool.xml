@@ -395,10 +395,11 @@
 
     <ImageButton
         android:id="@+id/distance_measure_add"
-        android:layout_width="@dimen/map_button_size"
-        android:layout_height="@dimen/map_button_size"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="@dimen/map_button_margin"
+        android:layout_marginEnd="12dp"
+        android:translationY="-10dp"
         android:background="@drawable/btn_circle"
         android:contentDescription="@string/shared_string_add"
         android:elevation="12dp"
