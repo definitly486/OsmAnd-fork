@@ -695,6 +695,9 @@ public class MapContextMenuFragment extends BaseFullScreenFragment implements Do
 			if (activity != null && point != null) {
 				// Close the selected-point sheet first, then launch measurement so the
 				// context-menu back-stack pop cannot remove the measurement fragment.
+				// close() (not just dismissMenu()) also deactivates the menu, so the
+				// context pin (flag) is no longer drawn on the first measurement point.
+				menu.close();
 				dismissMenu();
 				view.post(() -> MeasurementToolFragment.showDistanceMeasureInstance(
 						activity.getSupportFragmentManager(), point));

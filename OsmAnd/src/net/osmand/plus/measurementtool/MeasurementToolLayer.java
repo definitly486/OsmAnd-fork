@@ -71,6 +71,11 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 	private Bitmap oldMovedPointIcon;
 	private Bitmap applyingPointIcon;
 	private Paint bitmapPaint;
+	private Paint distanceLinePaint;
+	private Paint distanceDotPaint;
+	private Paint distanceDotOutlinePaint;
+	private Paint distanceCrossPaint;
+	private final Path distancePath = new Path();
 	private final RenderingLineAttributes lineAttrs = new RenderingLineAttributes("measureDistanceLine");
 
 	private MultiProfileGeometryWay multiProfileGeometry;
@@ -158,11 +163,107 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 		bitmapPaint.setDither(true);
 		bitmapPaint.setFilterBitmap(true);
 
+		createDistanceModePaints(view);
+
 		marginPointIconY = pointIcon.getHeight() / 2;
 		marginPointIconX = pointIcon.getWidth() / 2;
 
 		marginApplyingPointIconY = applyingPointIcon.getHeight() / 2;
 		marginApplyingPointIconX = applyingPointIcon.getWidth() / 2;
+	}
+
+	private void createDistanceModePaints(@NonNull OsmandMapTileView view) {
+		float density = view.getDensity();
+		int dark = 0xFF4A4A4A;
+
+		distanceLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		distanceLinePaint.setStyle(Paint.Style.STROKE);
+		distanceLinePaint.setStrokeCap(Paint.Cap.BUTT);
+		distanceLinePaint.setStrokeJoin(Paint.Join.ROUND);
+		distanceLinePaint.setStrokeWidth(3.5f * density);
+		distanceLinePaint.setPathEffect(new DashPathEffect(new float[] {5f * density, 3f * density}, 0));
+
+		distanceDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		distanceDotPaint.setStyle(Paint.Style.FILL);
+
+		distanceDotOutlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		distanceDotOutlinePaint.setStyle(Paint.Style.FILL);
+		distanceDotOutlinePaint.setColor(Color.WHITE);
+
+		distanceCrossPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		distanceCrossPaint.setStyle(Paint.Style.STROKE);
+		distanceCrossPaint.setStrokeCap(Paint.Cap.BUTT);
+		distanceCrossPaint.setStrokeWidth(1.5f * density);
+
+		updateDistanceModeColors(false, dark);
+	}
+
+	private void updateDistanceModeColors(boolean nightMode, int darkColor) {
+		int color = nightMode ? 0xFFE0E0E0 : darkColor;
+		distanceLinePaint.setColor(color);
+		distanceDotPaint.setColor(color);
+		distanceCrossPaint.setColor(color);
+		distanceDotOutlinePaint.setColor(nightMode ? 0xFF303030 : Color.WHITE);
+	}
+
+	/**
+	 * Simple distance mode (Yandex Maps style): thick dashed dark line from the placed points
+	 * to the screen center, a small dot for every placed point and a thin crosshair at the center.
+	 * No pin / location icons are drawn.
+	 */
+	private void drawDistanceModeOverlay(@NonNull Canvas canvas, @NonNull RotatedTileBox tb, boolean nightMode) {
+		updateDistanceModeColors(nightMode, 0xFF4A4A4A);
+		float density = view.getDensity();
+		MapRendererView mapRenderer = getMapRenderer();
+
+		float cx = tb.getCenterPixelX();
+		float cy = tb.getCenterPixelY();
+
+		List<WptPt> points = editingCtx != null ? editingCtx.getPoints() : new ArrayList<>();
+		List<PointF> pixels = new ArrayList<>();
+		for (WptPt pt : points) {
+			if (pt.isGap()) {
+				continue;
+			}
+			if (mapRenderer != null) {
+				pixels.add(NativeUtilities.getElevatedPixelFromLatLon(mapRenderer, tb, pt.getLat(), pt.getLon()));
+			} else {
+				pixels.add(new PointF(tb.getPixXFromLatLon(pt.getLat(), pt.getLon()),
+						tb.getPixYFromLatLon(pt.getLat(), pt.getLon())));
+			}
+		}
+
+		canvas.rotate(-tb.getRotate(), cx, cy);
+
+		if (!pixels.isEmpty()) {
+			distancePath.reset();
+			PointF first = pixels.get(0);
+			distancePath.moveTo(first.x, first.y);
+			for (int i = 1; i < pixels.size(); i++) {
+				distancePath.lineTo(pixels.get(i).x, pixels.get(i).y);
+			}
+			if (editingCtx.getSelectedPointPosition() == -1) {
+				distancePath.lineTo(cx, cy);
+			}
+			canvas.drawPath(distancePath, distanceLinePaint);
+
+			float outerR = 6f * density;
+			float innerR = 4.5f * density;
+			for (PointF px : pixels) {
+				canvas.drawCircle(px.x, px.y, outerR, distanceDotOutlinePaint);
+				canvas.drawCircle(px.x, px.y, innerR, distanceDotPaint);
+			}
+		}
+
+		// Crosshair with an empty gap in the middle
+		float gap = 3f * density;
+		float arm = 13f * density;
+		canvas.drawLine(cx - arm, cy, cx - gap, cy, distanceCrossPaint);
+		canvas.drawLine(cx + gap, cy, cx + arm, cy, distanceCrossPaint);
+		canvas.drawLine(cx, cy - arm, cx, cy - gap, distanceCrossPaint);
+		canvas.drawLine(cx, cy + gap, cx, cy + arm, distanceCrossPaint);
+
+		canvas.rotate(tb.getRotate(), cx, cy);
 	}
 
 	@Override
@@ -375,10 +476,20 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 			if (mapRendererChanged) {
 				this.mapRendererChanged = false;
 			}
-			if (editingCtx.isInApproximationMode()) {
+			if (distanceMeasureMode) {
+				// Simple distance mode draws its own overlay in onDraw()
+				if (hasMapRenderer) {
+					clearCachedSegmentsPointsCounters();
+					clearCachedSegmentsRenderables();
+					clearPointsProvider();
+				}
+				multiProfileGeometry.clearWay();
+			} else if (editingCtx.isInApproximationMode()) {
 				drawApproximatedLines(canvas, tb, updated);
 			}
-			if (editingCtx.isInMultiProfileMode()) {
+			if (distanceMeasureMode) {
+				// nothing else to prepare
+			} else if (editingCtx.isInMultiProfileMode()) {
 				if (hasMapRenderer) {
 					clearCachedSegmentsPointsCounters();
 					clearCachedSegmentsRenderables();
@@ -401,7 +512,9 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 			}
 
 			canvas.rotate(-tb.getRotate(), tb.getCenterPixelX(), tb.getCenterPixelY());
-			drawPoints(canvas, tb);
+			if (!distanceMeasureMode) {
+				drawPoints(canvas, tb);
+			}
 			if (hasMapRenderer) {
 				if (updated) {
 					recreateHighlightedPointCollection();
@@ -436,14 +549,20 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 
 	@Override
 	public void onDraw(Canvas canvas, RotatedTileBox tb, DrawSettings settings) {
-		if (isInMeasurementMode() && editingCtx.getSelectedPointPosition() == -1) {
+		if (distanceMeasureMode) {
+			if (isDrawingEnabled()) {
+				drawDistanceModeOverlay(canvas, tb, settings.isNightMode());
+			}
+		} else if (isInMeasurementMode() && editingCtx.getSelectedPointPosition() == -1) {
 			drawCenterIcon(canvas, tb, settings.isNightMode());
 		}
 
 		boolean hasMapRenderer = hasMapRenderer();
 		if (isDrawingEnabled()) {
 			boolean updated = lineAttrs.updatePaints(view.getApplication(), settings, tb) || forceUpdateOnDraw;
-			if (!editingCtx.isInApproximationMode()) {
+			if (distanceMeasureMode) {
+				resetBeforeAfterRenderer();
+			} else if (!editingCtx.isInApproximationMode()) {
 				drawBeforeAfterPath(canvas, tb, updated);
 			} else {
 				resetBeforeAfterRenderer();
@@ -470,7 +589,7 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 			}
 			List<WptPt> beforePoints = editingCtx.getBeforePoints();
 			List<WptPt> afterPoints = editingCtx.getAfterPoints();
-			if (beforePoints.size() > 0) {
+			if (!distanceMeasureMode && beforePoints.size() > 0) {
 				WptPt point = beforePoints.get(beforePoints.size() - 1);
 				if (hasMapRenderer) {
 					if (beforePointMarker != null) {
@@ -484,7 +603,7 @@ public class MeasurementToolLayer extends OsmandMapLayer implements IContextMenu
 			} else if (hasMapRenderer && beforePointMarker != null) {
 				beforePointMarker.setIsHidden(true);
 			}
-			if (afterPoints.size() > 0) {
+			if (!distanceMeasureMode && afterPoints.size() > 0) {
 				WptPt point = afterPoints.get(0);
 				if (hasMapRenderer) {
 					if (afterPointMarker != null) {
