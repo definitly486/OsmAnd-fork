@@ -786,6 +786,7 @@
     <string name="incomplete_locale">неполный</string>
     <string name="map_widget_max_speed">Ограничение скорости</string>
     <string name="download_select_map_types">Прочие карты</string>
+    <string name="download_sqlite_maps">SQLite карты</string>
     <string name="download_srtm_maps">Изолинии</string>
     <string name="intermediate_points_change_order">Изменить порядок</string>
     <string name="recording_context_menu_show">Просмотр</string>

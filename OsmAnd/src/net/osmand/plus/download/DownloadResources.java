@@ -220,6 +220,16 @@ public class DownloadResources extends DownloadResourceGroup {
 		otherMapsScreen.addGroup(otherMaps);
 		otherMapsGroup.addGroup(otherMapsScreen);
 
+		DownloadResourceGroup sqliteMapsGroup = new DownloadResourceGroup(this, DownloadResourceGroupType.SQLITE_MAPS_GROUP);
+		DownloadResourceGroup sqliteMapsScreen = new DownloadResourceGroup(sqliteMapsGroup, DownloadResourceGroupType.SQLITE_MAPS);
+		DownloadResourceGroup sqliteMaps = new DownloadResourceGroup(sqliteMapsGroup, DownloadResourceGroupType.SQLITE_MAPS_HEADER);
+		PredefinedSqliteIndexItem vurnary = new PredefinedSqliteIndexItem(
+				"lat55.42589_lon46.78199_r40.0.sqlitedb", "Вурнары",
+				"https://github.com/definitly486/definitly486/releases/download/osmand/lat55.42589_lon46.78199_r40.0.sqlitedb",
+				1782211914000L, 346648576L);
+		sqliteMaps.addItem(vurnary);
+		customResources.add(vurnary);
+
 		DownloadResourceGroup otherGroup = new DownloadResourceGroup(this, DownloadResourceGroupType.OTHER_GROUP);
 		DownloadResourceGroup voiceScreenTTS = new DownloadResourceGroup(otherGroup, DownloadResourceGroupType.VOICE_TTS);
 		DownloadResourceGroup voiceScreenRec = new DownloadResourceGroup(otherGroup, DownloadResourceGroupType.VOICE_REC);
@@ -397,6 +407,10 @@ public class DownloadResources extends DownloadResourceGroup {
 		if (!otherMaps.isEmpty()) {
 			addGroup(otherMapsGroup);
 		}
+
+		sqliteMapsScreen.addGroup(sqliteMaps);
+		sqliteMapsGroup.addGroup(sqliteMapsScreen);
+		addGroup(sqliteMapsGroup);
 
 		voiceScreenTTS.addGroup(voiceTTS);
 		voiceScreenRec.addGroup(voiceRec);
