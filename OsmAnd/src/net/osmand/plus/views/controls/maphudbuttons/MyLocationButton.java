@@ -65,22 +65,22 @@ public class MyLocationButton extends MapButton {
 	}
 
 	@Override
-	protected void updateColors(boolean nightMode) {
-		Context context = getContext();
-		// Same look as the location button in Yandex Maps: a round button with a navigation arrow.
-		// The background is always plain, only the arrow color shows the current state.
-		int arrowColor;
-		if (app.getLocationProvider().getLastKnownLocation() == null) {
-			arrowColor = ColorUtilities.getMapButtonIconColor(context, nightMode);
-		} else if (app.getMapViewTrackingUtilities().isMapLinkedToLocation()) {
-			arrowColor = ColorUtilities.getColor(context, R.color.color_myloc_distance);
-		} else {
-			arrowColor = ColorUtilities.getPrimaryTextColor(context, nightMode);
-		}
-		setIconColor(arrowColor);
-		setBackgroundColors(ColorUtilities.getColor(context, nightMode ? R.color.map_widget_dark : R.color.map_widget_light),
-				ColorUtilities.getMapButtonBackgroundPressedColor(context, nightMode));
-	}
+protected void updateColors(boolean nightMode) {
+    // фон и базовые цвета берём из стандартной логики MapButton
+    super.updateColors(nightMode);
+
+    Context context = getContext();
+    int arrowColor;
+    if (app.getLocationProvider().getLastKnownLocation() == null) {
+        arrowColor = ColorUtilities.getMapButtonIconColor(context, nightMode);
+    } else if (app.getMapViewTrackingUtilities().isMapLinkedToLocation()) {
+        // цвет из настроек профиля вместо жёсткого color_myloc_distance
+        arrowColor = app.getSettings().getApplicationMode().getProfileColor(nightMode);
+    } else {
+        arrowColor = ColorUtilities.getPrimaryTextColor(context, nightMode);
+    }
+    setIconColor(arrowColor);
+}
 
 	private boolean moveBackToLocation(boolean showLocationMenu) {
 		if (OsmAndLocationProvider.isLocationPermissionAvailable(mapActivity)) {
